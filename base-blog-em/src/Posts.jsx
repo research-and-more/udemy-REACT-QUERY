@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { fetchPosts, deletePost, updatePost } from "./api";
 import { PostDetail } from "./PostDetail";
@@ -9,7 +10,21 @@ export function Posts() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   // replace with useQuery
-  const data = [];
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isError) {
+    return <div>
+      <h3>Oops, something went wrong!</h3>
+      <p>Error: {error.message}</p>
+    </div>;
+  } 
 
   return (
     <>
